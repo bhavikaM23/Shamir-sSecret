@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-function decodeValue(value, base) {
+function decodeY(value, base) {
   return BigInt(parseInt(value, base));
 }
 
@@ -21,14 +21,14 @@ function lagrangeInterpolation(points, xValue) {
   return result;
 }
 
-function findConstantTerm(inputFile) {
+function findC(inputFile) {
   const input = JSON.parse(fs.readFileSync(inputFile, "utf8"));
 
   const n = input.keys.n;
   const k = input.keys.k;
 
   if (n < k) {
-    throw new Error("Number of roots provided is less than required roots (k).");
+    throw new Error("Number of roots provided is less k.");
   }
 
   const points = [];
@@ -37,23 +37,23 @@ function findConstantTerm(inputFile) {
 
     const x = BigInt(key);
     const base = parseInt(input[key].base);
-    const y = decodeValue(input[key].value, base);
+    const y = decodeY(input[key].value, base);
 
     points.push({ x, y });
   }
 
-  const selectedPoints = points.slice(0, k);
-  const constantTerm = lagrangeInterpolation(selectedPoints, 0);
+  const Points = points.slice(0, k);
+  const c = lagrangeInterpolation(Points, 0);
 
-  return constantTerm.toString();
+  return c.toString();
 }
 
 try {
-  const testCase1 = findConstantTerm("testcase1.json");
-  const testCase2 = findConstantTerm("testcase2.json");
+  const res1 = findC("testcase1.json");
+  const res2 = findC("testcase2.json");
 
-  console.log("Constant term for Test Case 1:", testCase1);
-  console.log("Constant term for Test Case 2:", testCase2);
+  console.log("Constant term for Test Case 1:", res1);
+  console.log("Constant term for Test Case 2:", res2);
 
 } catch (error) {
   console.error("Error:", error.message);
